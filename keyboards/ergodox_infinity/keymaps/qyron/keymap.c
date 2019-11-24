@@ -1,6 +1,4 @@
 #include QMK_KEYBOARD_H
-#include "debug.h"
-#include "action_layer.h"
 #include "version.h"
 
 enum custom_keycodes {
@@ -11,27 +9,6 @@ enum custom_keycodes {
 };
 
 #include "keyboards/ergodox_qyron/current.c"
-
-const uint16_t PROGMEM fn_actions[] = {
-};
-
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:
-        if (record->event.pressed) {
-          SEND_STRING (QMK_KEYBOARD "/" QMK_KEYMAP " @ " QMK_VERSION);
-        }
-        break;
-        case 1:
-        if (record->event.pressed) { // For resetting EEPROM
-          eeconfig_init();
-        }
-        break;
-      }
-    return MACRO_NONE;
-};
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
@@ -65,6 +42,7 @@ void matrix_init_user(void) {
 
 };
 
+
 // Runs constantly in the background, in a loop.
 void matrix_scan_user(void) {
 
@@ -74,15 +52,14 @@ void matrix_scan_user(void) {
     ergodox_right_led_1_off();
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
-    if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK))
-      ergodox_right_led_1_on();
     switch (layer) {
+      // TODO: Make this relevant to the ErgoDox EZ.
         case 1:
+            ergodox_right_led_1_on();
+            break;
+        case 2:
             ergodox_right_led_2_on();
             break;
-        /* case 2: */
-        /*     ergodox_right_led_3_on(); */
-        /*     break; */
         default:
             // none
             break;
