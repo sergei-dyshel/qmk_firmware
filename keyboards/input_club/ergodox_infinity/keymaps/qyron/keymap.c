@@ -66,10 +66,14 @@ void matrix_scan_user(void){
 #ifdef ST7565_ENABLE
 void st7565_task_user(void) {
     ergodox_infinity_lcd_color(UINT16_MAX / 8, UINT16_MAX / 8, UINT16_MAX / 8);
-    if (get_highest_layer(layer_state) == 1) {
-        ergodox_infinity_lcd_color(0, 0, UINT16_MAX / 2); // blue
-    } else if (host_keyboard_leds() & (1 << USB_LED_CAPS_LOCK)) {
+    if (host_keyboard_led_state().caps_lock) {
         ergodox_infinity_lcd_color(UINT16_MAX / 2, 0, 0); // red
+    }
+    else if (get_highest_layer(layer_state) == 1) {
+        ergodox_infinity_lcd_color(0, 0, UINT16_MAX / 2); // blue
+    }
+    else if (get_highest_layer(layer_state) == 2) {
+        ergodox_infinity_lcd_color(0, UINT16_MAX / 2, 0); // green
     }
     st7565_write_ln(QMK_VERSION, false);
     st7565_write_ln(QMK_BUILDDATE, false);
